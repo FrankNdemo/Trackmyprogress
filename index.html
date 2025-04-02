@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackMySuccess Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js" defer></script>
+    <script src="app.js"></script>
+</head>
+<body>
+<div class="navbar">
+    <div class="navbar-container">
+        <div class="logo">
+            <img src="logo.jpg" alt="TrackMySuccess Logo">
+        </div>
+        <ul>
+            <li id="homeLink">Home</li>
+            <li id="aboutLink">About</li>
+            <li id="analyticsLink">Analytics</li>
+            <li id="contactLink">Contact</li>
+            <li id="loginBtn" onclick="showLoginPopup()">Login</li>
+            <li id="logoutBtn" onclick="logout()" style="display: none;">Logout</li>
+        </ul>
+    </div>
+</div>
+    <section class="pop">
+        <div class="overlay" id="loginOverlay">
+            <div class="popup-container">
+                <div class="popup-image">
+                    <img src="https://img.freepik.com/free-vector/congratulations-card-template-with-man-graduation-gown_1308-3010.jpg" alt="Login Image">
+                </div>
+                <div class="popup">
+                    <h2>Login</h2>
+                    <input type="text" id="username" placeholder="Enter Username">
+                    <input type="password" id="password" placeholder="Enter Password">
+                    <select id="role">
+                        <option value="">Select Role</option>
+                        <option value="Teacher">Teacher</option>
+                        <option value="Student">Student</option>
+                        <option value="Parent">Parent</option>
+                        <option value="Admin">Admin</option>
+                    </select>
+                    <button onclick="login()">Login</button>
+                    <div class="auth-links"> 
+                        <a class="reg" href="#" onclick="showRegisterPopup()">Register</a>
+                        <a href="#" onclick="showPasswordResetPopup()">Forgot password?</a>
+                    </div>
+                    <button class="cancel-btn" onclick="hidePopups()">Cancel</button>
+                </div>
+            </div> 
+        </div>
+
+<!-- Password Reset Popup -->
+<div class="overlay" id="passwordReseOverlay" style="display: none;">
+    <div class="rese-popup">
+      <h2 id="reseTitle">Reset password</h2>
+      <p class="rese-subtitle">We'll email you a password reset link.</p>
+      
+      <!-- Email Input State -->
+      <div id="emailInputState">
+        <div class="input-group">
+          <input type="email" id="resetEmail" placeholder="Enter your account email">
+          <p class="error-message" id="emailError" style="display: none;">Please enter a valid email</p>
+        </div>
+        <button class="reset-btn" onclick="startPasswordReset()">Start password reset</button>
+      </div>
+      
+      <!-- Success State (hidden initially) -->
+      <div id="successState" style="display: none;">
+        <div class="email-confirmation">
+          <span id="confirmedEmail">likentnerg@gmail.com</span>
+          <div class="success-check">✓ Email sent</div>
+        </div>
+        <button class="close-btn" onclick="hideResetPopup()">Close</button>
+      </div>
+    </div>
+  </div>
+        
+    <div class="overlay" id="registerOverlay">
+    <div class="popup-container">
+        <div class="popup-image">
+            <img src="https://img.freepik.com/free-vector/congratulations-card-template-with-man-graduation-gown_1308-3010.jpg?t=st=1743174913~exp=1743178513~hmac=aabc093b17aa8273c7a0b4e2b3c3c83ee23e4f06aa4cc386265b2167381a4c5c&w=900" alt="Register Image">
+        </div>
+        <div class="popup">
+            <h2>Register</h2>
+            <input type="text" id="newUsername" placeholder="Enter Full Name" required>
+            <input type="password" id="newPassword" placeholder="Enter Password" required>
+            
+            <select id="newRole" onchange="updateRegistrationFields()" required>
+                <option value="">Select Role</option>
+                <option value="Teacher">Teacher</option>
+                <option value="Student">Student</option>
+                <option value="Parent">Parent</option>
+                <option value="Admin"></option>
+            </select>
+            
+            <div id="dynamicFields"></div>
+            <button onclick="register()">Register</button>
+            <a class="reg" href="#" onclick="showLoginPopup()">Already have an account? Login</a>
+            <button class="cancel-btn" onclick="hidePopups()">Cancel</button>
+           </div>
+         </div>    
+        </div>
+    </section>
+
+    <div class="app-container">
+        <section class="hero" id="hero">
+            <section class="hero-section">
+                <div class="text-content">
+                    <h1>TrackMySuccess</h1>
+                    <p>
+                        TrackMySuccess is dedicated to enhancing the Competency-Based Curriculum (CBC)
+                        experience by providing a digital platform for students, teachers, and parents to
+                        track academic progress and performance effectively.
+                    </p>
+                    <div class="buttons">
+                        <a href="#" onclick="showRegisterPopup()" class="btn-pri">Get Started</a>
+                        <a href="#" class="btn-second" id="learnMoreLink">Learn More →</a>
+                    </div>
+                </div>
+                <div class="image-content">
+                    <img src="cover.jpg" alt="TrackMySuccess Preview">
+                </div>
+            </section>
+            <div class="hero-features-heading">
+                <h2>Discover What TrackMySuccess Offers</h2>
+                <p>Our platform provides powerful tools for monitoring and improving student performance</p>
+            </div>
+            <div class="features-container">
+            </div>
+            <section class="why-c">
+                <div class="whycbc">
+                    <p><nav> What Makes TrackMySuccess Essential?</nav></p>
+                    <h3>Streamline CBC Assessment Efforts</h3>
+                    <ul>
+                        <li>Automate tedious record-keeping for teachers, making assessment tracking a breeze.</li>
+                        <li>Gain real-time insights into classroom assessments for enhanced transparency and efficiency.</li>
+                        <li>Effortlessly prepare end-of-term reports to facilitate meaningful discussions with parents.</li>
+                        <li>Ensure student records are securely stored and accessible anytime, eliminating risks of loss or damage.</li>
+                    </ul>
+                </div>
+                <div class="image-con">
+                    <img src="https://img.freepik.com/free-photo/working-from-home-ergonomic-workstation_23-2149204621.jpg?t=st=1743075216~exp=1743078816~hmac=d0f227add9af0373dd0ae942f02dfd2b3a9fbf547cf4b9b630effd29a37fbd9f&w=740" alt="Ease the load Preview">
+                </div>
+            </section>
+            <section class="why-d">
+                <div class="image-con">
+                    <img src="track.png" alt="Ease the load Preview">
+                </div>            
+                <div class="whycbc">
+                    <ul>
+                        <h3>Effortless School Management with Parent Engagement</h3>
+                        <p>Seamlessly streamline school operations and foster active participation from parents in their child's education.</p>
+                        <p>Key Features:</p>
+                        <li>Automated Assessments – Simplify tracking and reporting for the CBC.</li>
+                        <li>Efficient School Administration – Reduce paperwork while enhancing record-keeping.</li>
+                        <li>Parental Engagement – Provide real-time access to student progress and performance.</li>
+                        <li>Time-Saving Reports – Instantly generate comprehensive learner insights.</li>
+                    </ul>
+                </div>
+            </section>
+            <section class="contact-section">
+                <div class="container">
+                    <img src="https://img.freepik.com/free-photo/focused-call-center-operator-typing-laptop_74855-4213.jpg?t=st=1742083303~exp=1742086903~hmac=89a985efe82411353ff53343daad1918bfd74d3ce1c91e837e19c544646b9b4c&w=1380" alt="Customer Support">
+                </div>
+                <div class="contact-inf">
+                    <h2>Your Success, Our Mission</h2>
+                    <div class="info-group">
+                        <div class="info-row">
+                            <div class="info">
+                                <span class="icon">🕒</span>
+                                <div>
+                                    <h4>Office Hours</h4>
+                                    <p>Monday-Sunday</p>
+                                    <p>8:00 am to 6:00 pm</p>
+                                </div>
+                            </div>
+                            <div class="info">
+                                <span class="icon">📍</span>
+                                <div>
+                                    <h4>Our Address</h4>
+                                    <p>Maseno Kisumu</p>
+                                    <p>Kenya</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info">
+                                <span class="icon">📞</span>
+                                <div>
+                                    <h4>Get In Touch</h4>
+                                    <p>+254114470441</p>
+                                    <p>+254768241871</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="community">
+                <div class="comm">
+                    <h1> Elevate Learning with Us</h1>
+                    <p>
+                        Sign up today to track student progress, revolutionize <br>
+                        academic success and parental engagement.
+                    </p>
+                    <div class="buttons">
+                        <a href="#" onclick="showRegisterPopup()" class="btn-rimary">Sign Up Now</a>
+                        <a href="#" class="btn-second" id="learnMoreLink">Learn More →</a>
+                    </div>
+                </div>
+                <div class="image-c">
+                    <img src="https://img.freepik.com/premium-photo/proud-pupil-showing-test-result-camera_13339-162163.jpg?w=740" alt="Community Image">
+                </div>
+            </section>
+        </section>
+        <p></p>
+        
+            <section class="D-section">
+                <section id="aboutSection" class="content-section">
+                    <h2>About Us <P>"Track. Learn. Succeed."</P></h2>
+                    <div class="about-content">
+                        <div class="about-card mission-card">
+                            <h3>Our Mission</h3>
+                            <p>We are committed to revolutionizing student progress tracking in the Competency-Based Curriculum (CBC) by providing an intuitive, data-driven platform that empowers Teachers, students, and parents. Also to enhance learning outcomes through personalized performance insights, real-time feedback, and actionable recommendations, fostering a culture of continuous growth and academic excellence.</p>
+                        </div>
+                        <div class="about-card vision-card">
+                            <h3>Our Vision</h3>
+                            <p>We envision a future where every student thrives through a personalized, data-driven learning experience, receiving real-time feedback and tailored resources that align with their individual strengths, needs, and learning pace. we strive to bridge educational gaps, empower learners, and foster academic excellence through innovative technology and competency-based assessments.</p>
+                        </div>
+                        <div class="about-card team-card">
+                            <h3>Our Team</h3>
+                            <p>Our Team consists a  dedicated team of Teachers, developers, designers and parents  who share a passion for revolutionizing education through technology.  we work collaboratively to create an intuitive and effective platform that enhances student learning, empowers teachers, real-time parental monitoring and streamlines academic tracking in the Competency-Based Curriculum.</p>
+                        </div>
+                    </div>
+                </section>
+            </section>
+    <section class="D-section">
+        <section id="analyticsSection" class="content-section">
+                <div class="container">
+                    <h2 class="section-title">Learn More<p>"Success is best measured by progress"</p></h2>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h3>Real-Time Analytics</h3>
+                            <p>Monitor student performance with comprehensive dashboards and detailed progress reports updated in real-time.</p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h3>Collaborative Platform</h3>
+                            <p>Connect teachers, students, and parents in one unified system for seamless communication and collaboration.</p>   
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                            <h3>Assignment Management</h3>
+                            <p>Streamline assignment creation, submission, and grading with our intuitive workflow tools.</p>
+                           
+                        </div>
+                    </div>
+                    
+                    <div class="cta-section">
+                        <h3>Ready to experience TrackMySuccess?</h3>
+                        <div class="cta-buttons">
+                            <a href="#register" class="cta-btn primary" onclick="showRegisterPopup()">Get Started Now</a>
+                            <a href="#demo" class="cta-btn secondary" id="requestdemoLink">Request a Demo</a>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonials">
+                        <h3>What Our Users Say</h3>
+                        <div class="testimonial-slider">
+                            <div class="testimonial">
+                                <p>"TrackMySuccess has transformed how we monitor student progress. The analytics are incredibly insightful."</p>
+                                <div class="author">
+                                    <img src="https://img.freepik.com/premium-vector/portrait-african-old-woman_684058-2138.jpg?w=826" alt="Sarah Johnson">
+                                    <span>Sarah Johnson, High School Teacher</span>
+                                </div>
+                            </div>
+                            <div class="testimonial">
+                                <p>"As a parent, I love being able to track my child's assignments and performance in one place."</p>
+                                <div class="author">
+                                    <img src="https://img.freepik.com/premium-vector/high-school-middle-school-student-portrait_684058-1547.jpg?w=740" alt="Michael Chen">
+                                    <span>Michael Chen, Parent</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </section>
+    </section>    
+<section class="D-section">
+    <section id="contactSection" class="content-section">
+        <h2>Contact Us <p>"Connect. Inquire. Grow."</p></h2>
+        <div class="contact-content">
+            <div class="contact-info">
+                <h3>Get in Touch</h3>
+                <p><i class="fas fa-phone"></i> Phone: +254114470441</p>
+                <p><i class="fas fa-envelope"></i> Email: support@trackmysuccess.com</p>
+                <p><i class="fas fa-map-marker-alt"></i> Address: 123 Education Drive, Maseno, Kenya</p>
+                <p><i class="fab fa-facebook"></i> Facebook: TrackMySuccess</p>
+            </div>
+            <div class="contact-form">
+                <h3>Send us a Message</h3>
+                <form id="contactForm">
+                    <input type="text" placeholder="Your Name" required>
+                    <input type="email" placeholder="Your Email" required>
+                    <textarea placeholder="Your Message" rows="5" required></textarea>
+                    <button type="submit" class="btn-primary">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+</section>
+<div class="sidebar-container">
+    <div class="sidebar" id="sidebar">
+        <div class="user-info" id="userInfo">
+            <div class="avatar">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <p id="sidebarUsername">Username</p>
+            <p id="sidebarRole">Role</p>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="menu-item active" data-section="dashboard">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </li>
+            <li class="menu-item" data-section="profile">
+                <i class="fas fa-user"></i> Profile
+            </li>
+            <li class="menu-item student-only" data-section="assignments">
+                <i class="fas fa-tasks"></i> Assignments
+            </li>
+            <li class="menu-item student-only" data-section="grades">
+                <i class="fas fa-chart-line"></i> Grades
+            </li>
+            <li class="menu-item teacher-only" data-section="students">
+                <i class="fas fa-user-graduate"></i> Students
+            </li>
+            <li class="menu-item teacher-only" data-section="gradebook">
+                <i class="fas fa-book"></i> Gradebook
+            </li>
+            <li class="menu-item parent-only" data-section="children">
+                <i class="fas fa-child"></i> Children
+            </li>
+            <li class="menu-item parent-only" data-section="meetings">
+                <i class="fas fa-calendar-alt"></i> PTA Meetings
+            </li>
+            <li class="menu-item admin-only" data-section="users">
+                <i class="fas fa-users-cog"></i> User Management
+            </li>
+            <li class="menu-item admin-only" data-section="subjects">
+                <i class="fas fa-book-open"></i> Subjects
+            </li>
+            <li class="menu-item admin-only" data-section="config">
+                <i class="fas fa-cogs"></i> Configuration
+            </li>
+            <li class="menu-item" data-section="settings">
+                <i class="fas fa-cog"></i> Settings
+            </li>
+            <li class="menu-item">
+                <div class="notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </div>
+            </li> 
+        </ul>
+    </div>
+</div>
+       
+        <div class="content-area">
+            <section id="dashboardSection" class="content-section active">
+                <div id="dashboard"> </div>
+            </section> 
+
+            <section id="profileSection" class="content-section">
+                <h2>My Profile</h2>
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="profile-info">
+                            <h3 id="profileName">John Doe</h3>
+                            <p id="profileRole">Student</p>
+                            <p id="profileEmail">john@example.com</p>
+                        </div>
+                    </div>
+                    <div class="profile-details" id="profileDetails">
+                        <div class="detail-group">
+                            <h4>Personal Information</h4>
+                            <div class="detail-row">
+                                <span class="detail-label">Full Name:</span>
+                                <span class="detail-value" id="profileFullName">John Doe</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Date of Birth:</span>
+                                <span class="detail-value" id="profileDob">January 1, 2000</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Contact:</span>
+                                <span class="detail-value" id="profileContact">+123-456-7890</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Address:</span>
+                                <span class="detail-value" id="profileAddress">123 School St, Education City</span>
+                            </div>
+                        </div>
+                        <div class="detail-group student-only">
+                            <h4>Academic Information</h4>
+                            <div class="detail-row">
+                                <span class="detail-label">Class:</span>
+                                <span class="detail-value">10A</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Admission Date:</span>
+                                <span class="detail-value">September 1, 2022</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Student ID:</span>
+                                <span class="detail-value">STD20220001</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="profile-actions">
+                        <button class="btn-primary" onclick="showEditProfilePopup()">Edit Profile</button>
+                        <button class="btn-secondary" onclick="showChangePasswordPopup()">Change Password</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="assignmentsSection" class="content-section student-only">
+                <h2 class="p">My Assignments</h2>
+                <div class="assignments-list">
+                    <div class="assignment-card">
+                        <div class="assignment-header">
+                            <h3>Mathematics Assignment</h3>
+                            <span class="badge pending">Pending</span>
+                        </div>
+                        <p>Complete exercises on quadratic equations</p>
+                        <div class="assignment-meta">
+                            <span><i class="fas fa-calendar-alt"></i> Due: May 15, 2023</span>
+                            <span><i class="fas fa-user"></i> Teacher: Ms. Johnson</span>
+                        </div>
+                        <div class="assignment-actions">
+                            <button class="btn-primary">Submit</button>
+                            <button class="btn-secondary">View Details</button>
+                        </div>
+                    </div>
+                    <div class="assignment-card">
+                        <div class="assignment-header">
+                            <h3>Science Project</h3>
+                            <span class="badge completed">Completed</span>
+                        </div>
+                        <p>Research and presentation on renewable energy sources</p>
+                        <div class="assignment-meta">
+                            <span><i class="fas fa-calendar-alt"></i> Due: May 10, 2023</span>
+                            <span><i class="fas fa-user"></i> Teacher: Mr. Smith</span>
+                        </div>
+                        <div class="assignment-actions">
+                            <button class="btn-secondary">View Feedback</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+<section id="performanceResourcesSection" class="content-section student-only">
+    <h2 class="p">My Academic Dashboard</h2>
+
+    <div class="assignment-exam-management centered-section">
+        <h3>Assignment & Exam Management</h3>
+        <div class="assignment-management-container">
+            <div class="upcoming-deadlines">
+                <h4>Upcoming Deadlines</h4>
+                <ul>
+                    <li>Mathematics Assignment - Due: May 15, 2023</li>
+                    <li>Science Project - Due: May 10, 2023</li>
+                </ul>
+            </div>
+
+            <div class="submit-assignment">
+                <h4>Submit Assignment</h4>
+                <input type="file" id="assignmentFile" accept=".pdf,.doc,.docx">
+                <button class="btn-primary">Upload</button>
+            </div>
+
+            <div class="resubmission-request">
+                <h4>Resubmission Request</h4>
+                <textarea id="resubmissionReason" placeholder="Explain why you need a re-evaluation..."></textarea>
+                <button class="btn-resubmit">Request Resubmission</button>
+            </div>
+
+            <div class="exam-schedule">
+                <h4>Exam Schedule</h4>
+                <ul>
+                    <li>Mathematics - May 20, 2023</li>
+                    <li>Science - May 22, 2023</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="study-resources centered-section">
+        <h3>Study Resources & Learning Hub</h3>
+        <div class="resources-list">
+            <div class="resource-card">
+                <h4>Course Materials</h4>
+                <ul>
+                    <li>Mathematics Notes - Chapter 1</li>
+                    <li>Science Video - Physics</li>
+                </ul>
+                <button class="btn-primary">Download All</button>
+            </div>
+
+            <div class="resource-card">
+                <h4>Past Papers</h4>
+                <ul>
+                    <li>Mathematics - 2022 Exam</li>
+                    <li>Science - 2022 Exam</li>
+                </ul>
+                <button class="btn-primary">Download</button>
+            </div>
+
+            <div class="resource-card">
+                <h4>Online Quizzes</h4>
+                <p>Test your knowledge before exams!</p>
+                <button class="btn-primary">Start Quiz</button>
+            </div>
+        </div>
+    </div>
+    <div class="attendance-participation centered-section">
+        <h3>Attendance & Participation</h3>
+        <div class="attendance-container">
+            <div class="attendance-overview">
+                <h4>Attendance Record</h4>
+                <p><strong>Present:</strong> 95%</p>
+                <p><strong>Absent:</strong> 5%</p>
+                <p><strong>Late Arrivals:</strong> 2</p>
+                <button class="btn-secondary">View Attendance History</button>
+            </div>
+
+            <div class="participation-score">
+                <h4>Participation Score</h4>
+                <p><strong>Assignments Submitted:</strong> 10/12</p>
+                <p><strong>Forum Participation:</strong> 15 posts</p>
+            </div>
+        </div>
+    </div>
+    <div class="communication-support centered-section">
+        <h3>Communication & Support</h3>
+        <div class="communication-options">
+            <button class="btn-primary"><i class="fas fa-comments"></i> Chat with Teacher</button>
+            <button class="btn-secondary"><i class="fas fa-users"></i> Classroom Forum</button>
+            <button class="btn-secondary"><i class="fas fa-question-circle"></i> Request Help</button>
+        </div>
+    </div>
+
+    <div class="badges-section centered-section">
+        <h3>Badges & Achievements</h3>
+        <div class="badge-list">
+            <span class="badge"><i class="fas fa-trophy"></i> Top Scorer</span>
+            <span class="badge"><i class="fas fa-star"></i> Most Improved</span>
+            <span class="badge"><i class="fas fa-check-circle"></i> Perfect Attendance</span>
+        </div>
+    </div>
+
+    <div class="grades-section centered-section">
+        <h3>My Grades</h3>
+        <div class="grades-overview">
+            <div class="overall-gpa">
+                <div class="gpa-circle">
+                    <span>3.8</span>
+                </div>
+                <p>Overall GPA</p>
+            </div>
+
+            <div class="grade-stats">
+                <div class="stat-item">
+                    <h4>85%</h4>
+                    <p>Average Score</p>
+                </div>
+                <div class="stat-item">
+                    <h4>92%</h4>
+                    <p>Best Subject</p>
+                </div>
+                <div class="stat-item">
+                    <h4>72%</h4>
+                    <p>Lowest Subject</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="subject-grades">
+            <h4>Grades by Subject</h4>
+            <table class="grades-table">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Midterm</th>
+                        <th>Final</th>
+                        <th>Assignments</th>
+                        <th>Total</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Mathematics</td>
+                        <td>82%</td>
+                        <td>88%</td>
+                        <td>85%</td>
+                        <td>85%</td>
+                        <td>A-</td>
+                    </tr>
+                    <tr>
+                        <td>Science</td>
+                        <td>90%</td>
+                        <td>94%</td>
+                        <td>92%</td>
+                        <td>92%</td>
+                        <td>A</td>
+                    </tr>
+                    <tr>
+                        <td>English</td>
+                        <td>78%</td>
+                        <td>84%</td>
+                        <td>80%</td>
+                        <td>81%</td>
+                        <td>B+</td>
+                    </tr>
+                    <tr>
+                        <td>History</td>
+                        <td>70%</td>
+                        <td>75%</td>
+                        <td>72%</td>
+                        <td>72%</td>
+                        <td>C+</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+            <section id="studentsSection" class="content-section teacher-only">
+                <h2>My Students</h2>
+                <div class="class-filter">
+                    <select id="classFilter">
+                        <option value="all">All Classes</option>
+                        <option value="10A">Class 10A</option>
+                        <option value="10B">Class 10B</option>
+                        <option value="11A">Class 11A</option>
+                    </select>
+                    <button class="btn-primary">Filter</button>
+                </div>
+                <div class="students-grid" id="studentsGrid">
+                </div>
+
+                <script>
+                const students = [
+                    { name: "Alice Johnson", class: "10A", performance: "excellent" },
+                    { name: "Bob Smith", class: "10A", performance: "good" },
+                    { name: "Charlie Brown", class: "10B", performance: "average" },
+                    { name: "Diana Williams", class: "11A", performance: "excellent" },
+                    { name: "Ethan Davis", class: "11A", performance: "good" }
+                ];
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    const grid = document.getElementById('studentsGrid');
+                    if (grid) {
+                        let html = '';
+                        students.forEach(student => {
+                            html += `
+                            <div class="student-card">
+                                <div class="student-avatar">
+                                    <i class="fas fa-user-graduate"></i>
+                                </div>
+                                <h3>${student.name}</h3>
+                                <p>Class: ${student.class}</p>
+                                <p>Performance: <span class="${student.performance}">${student.performance.charAt(0).toUpperCase() + student.performance.slice(1)}</span></p>
+                                <div class="student-actions">
+                                    <button class="btn-primary">View Profile</button>
+                                    <button class="btn-secondary">Send Message</button>
+                                </div>
+                            </div>`;
+                        });
+                        grid.innerHTML = html;
+                    }
+                });
+                </script>
+            </section>
+
+<section id="progressManagementSection" class="content-section teacher-only">
+    <h2 class="p">Student Progress & Management</h2>
+    <div class="progress-tracking centered-section">
+        <h3>Student Progress Tracking</h3>
+        <div class="progress-filters">
+            <select id="progressClassFilter">
+                <option value="10A">Class 10A</option>
+                <option value="10B">Class 10B</option>
+                <option value="11A">Class 11A</option>
+            </select>
+            <select id="progressStudentFilter">
+                <option value="all">All Students</option>
+                <option value="Alice Johnson">Alice Johnson</option>
+                <option value="Bob Smith">Bob Smith</option>
+                <option value="Charlie Brown">Charlie Brown</option>
+            </select>
+            <button class="btn-primary">Generate Report</button>
+        </div>
+        <div class="progress-cards">
+            <div class="progress-card">
+                <h4>Attendance</h4>
+                <p>95% Attendance Rate</p>
+                <p><span class="excellent">Excellent</span></p>
+            </div>
+            <div class="progress-card">
+                <h4>Performance vs Class Average</h4>
+                <p>Alice Johnson: 89% (Class Avg: 84%)</p>
+                <p><span class="good">Above Average</span></p>
+            </div>
+        </div>
+        <button class="btn-secondary">View Detailed Progress</button>
+    </div>
+
+    <div class="assignment-management centered-section">
+        <h3>Assignment & Exam Management</h3>
+        <div class="assignment-controls">
+            <button class="btn-primary" id="createAssignmentBtn">
+                <i class="fas fa-plus"></i> Create New Assignment
+            </button>
+            <input type="datetime-local" id="assignmentDeadline" class="deadline-picker">
+        </div>
+        <div class="assignment-list">
+            <div class="assignment-card">
+                <h4>Math Assignment 1</h4>
+                <p>Deadline: 2023-12-15</p>
+                <p>Status: 20/25 Submitted</p>
+                <button class="btn-sm btn-primary">View Submissions</button>
+                <button class="btn-sm btn-secondary">Check Plagiarism</button>
+            </div>
+            <div class="assignment-card">
+                <h4>Science Project</h4>
+                <p>Deadline: 2023-12-20</p>
+                <p>Status: 15/25 Submitted</p>
+                <button class="btn-sm btn-primary">View Submissions</button>
+                <button class="btn-sm btn-secondary">Check Plagiarism</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="communication-engagement centered-section">
+        <h3>Communication & Engagement</h3>
+        <div class="communication-controls">
+            <button class="btn-primary" id="sendAnnouncementBtn">
+                <i class="fas fa-bullhorn"></i> Send Announcement
+            </button>
+            <button class="btn-secondary" id="openForumBtn">
+                <i class="fas fa-comments"></i> Open Classroom Forum
+            </button>
+        </div>
+        <div class="messages-list">
+            <div class="message-card">
+                <h4>Reminder: Math Assignment Due</h4>
+                <p>Sent: 2023-12-10</p>
+                <p>Status: Delivered to 25/25 Students</p>
+            </div>
+            <div class="message-card">
+                <h4>Parent-Teacher Meeting</h4>
+                <p>Sent: 2023-12-05</p>
+                <p>Status: Delivered to 25/25 Students</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="curriculum-planning centered-section">
+        <h3>Curriculum & Lesson Planning</h3>
+        <div class="curriculum-controls">
+            <button class="btn-primary" id="uploadMaterialBtn">
+                <i class="fas fa-upload"></i> Upload Study Material
+            </button>
+            <button class="btn-secondary" id="scheduleClassBtn">
+                <i class="fas fa-calendar-alt"></i> Schedule Live Class
+            </button>
+        </div>
+        <div class="materials-list">
+            <div class="material-card">
+                <h4>Math Notes - Chapter 1</h4>
+                <p>Uploaded: 2023-12-01</p>
+                <button class="btn-sm btn-primary">Download</button>
+            </div>
+            <div class="material-card">
+                <h4>Science Video - Physics</h4>
+                <p>Uploaded: 2023-12-05</p>
+                <button class="btn-sm btn-primary">Watch</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="gradebook-analytics centered-section">
+        <h3>Class Performance Analytics</h3>
+        <div class="analytics-cards">
+            <div class="analytics-card">
+                <h4>Class Average</h4>
+                <p>84%</p>
+            </div>
+            <div class="analytics-card">
+                <h4>Highest Score</h4>
+                <p>92%</p>
+            </div>
+            <div class="analytics-card">
+                <h4>Lowest Score</h4>
+                <p>75%</p>
+            </div>
+        </div>
+        <div class="chart-container">
+            <canvas id="classPerformanceChart"></canvas>
+        </div>
+    </div>
+</section>
+
+            <section id="childrenSection" class="content-section parent-only">
+                <h2>My Children</h2>
+                <div class="children-list">
+                    <div class="child-card">
+                        <div class="child-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="child-info">
+                            <h3>John Doe</h3>
+                            <p>Class: 10A</p>
+                            <p>Overall Grade: A-</p>
+                            <p>Attendance: 95%</p>
+                        </div>
+                        <div class="child-performance">
+                            <div class="performance-chart">
+                                <canvas id="childPerformanceChart1"></canvas>
+                            </div>
+                        </div>
+                        <div class="child-actions">
+                            <button class="btn-primary">View Details</button>
+                            <button class="btn-secondary">Contact Teacher</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="recent-alerts">
+                    <h3>Recent Alerts</h3>
+                    <div class="alert-item">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <div class="alert-content">
+                            <h4>Low Attendance</h4>
+                            <p>John missed 3 days of school this month.</p>
+                            <span class="alert-date">May 10, 2023</span>
+                        </div>
+                    </div>
+                    <div class="alert-item">
+                        <i class="fas fa-check-circle"></i>
+                        <div class="alert-content">
+                            <h4>Excellent Performance</h4>
+                            <p>John scored 92% in the Science exam.</p>
+                            <span class="alert-date">May 5, 2023</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+<section id="childPerformanceSection" class="content-section parent-only">
+    <h2>Child’s Performance & Engagement</h2>
+
+    <div class="performance-tracking">
+        <h3 >Child’s Performance Tracking</h3>
+        <div class="performance-cards">
+            <div class="performance-card">
+                <h4>Academic Report</h4>
+                <p><strong>Overall Grade:</strong> A-</p>
+                <p><strong>Attendance:</strong> 95%</p>
+                <p><strong>Teacher Feedback:</strong> "John is doing well in Mathematics but needs improvement in History."</p>
+                <button class="btn-primary">View Detailed Report</button>
+            </div>
+            <div class="performance-card">
+                <h4>Class Comparison</h4>
+                <p><strong>Your Child’s Average:</strong> 85%</p>
+                <p><strong>Class Average:</strong> 78%</p>
+                <button class="btn-secondary">Compare with Class</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="attendance-behavior">
+        <h3>Attendance & Behavior Monitoring</h3>
+        <div class="attendance-container">
+            <div class="attendance-summary">
+                <h4>Attendance Summary</h4>
+                <p><strong>Present:</strong> 95%</p>
+                <p><strong>Absent:</strong> 5%</p>
+                <p><strong>Late Arrivals:</strong> 2</p>
+                <button class="btn-secondary">View Attendance</button>
+            </div>
+            <div class="behavior-reports">
+                <h4>Behavior Reports</h4>
+                <p><strong>Discipline:</strong> Excellent</p>
+                <p><strong>Participation:</strong> Active</p>
+                <p><strong>Conduct:</strong> Good</p>
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="homework-alerts">
+        <h3>Homework & Assignment Alerts</h3>
+        <div class="work">
+            <div class="homework-tracker">
+                <h4>Homework Tracker</h4>
+                <ul>
+                    <li><strong>Mathematics Assignment:</strong> Completed</li>
+                    <li><strong>Science Project:</strong> Pending (Due: May 10, 2023)</li>
+                </ul>
+                <button class="btn-primary">View All Assignments</button>
+            </div>
+            <div class="assignment-comments">
+                <h4>Teacher Comments</h4>
+                <p><strong>Mathematics Assignment:</strong> "Well done! Keep it up."</p>
+                <p><strong>Science Project:</strong> "Please submit before the deadline."</p>
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="extracurricular-wellbeing">
+        <h3>Extracurricular Activities & Well-being</h3>
+        <div class="extra">
+            <div class="activities">
+                <h4>Sports & Clubs</h4>
+                <p><strong>Basketball Team:</strong> Active Member</p>
+                <p><strong>Science Club:</strong> Regular Participant</p>
+            </div>
+            <div class="health-wellbeing">
+                <h4>Health & Well-being</h4>
+                <p><strong>Vaccination Records:</strong> Up to Date</p>
+                <p><strong>Counseling Sessions:</strong> 2 this month</p>
+                <button class="btn-secondary">View Health Records</button>
+            </div>
+        
+        </div>
+            
+       
+    </div>
+
+    <div class="communication-engagement">
+        <h3>Communication & School Engagement</h3>
+        <div class="communication-options">
+            <button class="btn-primary"><i class="fas fa-comments"></i> Message Teacher</button>
+            <button class="btn-secondary"><i class="fas fa-bullhorn"></i> View Announcements</button>
+            <button class="btn-secondary"><i class="fas fa-calendar-alt"></i> Request Meeting</button>
+        </div>
+    </div>
+</section>
+
+            <section id="meetingsSection" class="content-section parent-only">
+                <h2>PTA Meetings</h2>
+                <div class="upcoming-meetings">
+                    <h3>Upcoming Meetings</h3>
+                    <div class="meeting-card">
+                        <div class="meeting-date">
+                            <div class="date-box">
+                                <span class="month">May</span>
+                                <span class="day">15</span>
+                            </div>
+                        </div>
+                        <div class="meeting-details">
+                            <h4>Term 2 Progress Review</h4>
+                            <p><i class="fas fa-clock"></i> 3:00 PM - 5:00 PM</p>
+                            <p><i class="fas fa-map-marker-alt"></i> School Auditorium</p>
+                            <p>Discuss student progress and upcoming events</p>
+                        </div>
+                        <div class="meeting-actions">
+                            <button class="btn-primary">Confirm Attendance</button>
+                            <button class="btn-secondary">Set Reminder</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="past-meetings">
+                    <h3>Past Meetings</h3>
+                    <table class="meetings-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Topic</th>
+                                <th>Teacher</th>
+                                <th>Attended</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>April 10, 2023</td>
+                                <td>Term 1 Review</td>
+                                <td>Ms. Johnson</td>
+                                <td><i class="fas fa-check"></i></td>
+                                <td><button class="btn-sm btn-secondary">View Notes</button></td>
+                            </tr>
+                            <tr>
+                                <td>February 15, 2023</td>
+                                <td>Initial Assessment</td>
+                                <td>Mr. Smith</td>
+                                <td><i class="fas fa-check"></i></td>
+                                <td><button class="btn-sm btn-secondary">View Notes</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="usersSection" class="content-section admin-only">
+                <h2>User Management</h2>
+                <div class="user-management-controls">
+                    <div class="user-search">
+                        <input type="text" placeholder="Search users...">
+                        <button class="btn-primary"><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="user-filters">
+                        <select id="roleFilter">
+                            <option value="all">All Roles</option>
+                            <option value="teacher">Teachers</option>
+                            <option value="student">Students</option>
+                            <option value="parent">Parents</option>
+                            <option value="admin">Admins</option>
+                        </select>
+                    </div>
+                    <button class="btn-primary"><i class="fas fa-user-plus"></i> Add New User</button>
+                </div>
+                <div class="users-table-container">
+                    <table class="users-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Role</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Last Login</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>001</td>
+                                <td>John Smith</td>
+                                <td>Teacher</td>
+                                <td>john@example.com</td>
+                                <td><span class="badge active">Active</span></td>
+                                <td>May 10, 2023</td>
+                                <td>
+                                    <button class="btn-sm btn-primary"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-sm btn-secondary"><i class="fas fa-lock"></i></button>
+                                    <button class="btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>002</td>
+                                <td>Alice Johnson</td>
+                                <td>Student</td>
+                                <td>alice@example.com</td>
+                                <td><span class="badge active">Active</span></td>
+                                <td>May 11, 2023</td>
+                                <td>
+                                    <button class="btn-sm btn-primary"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-sm btn-secondary"><i class="fas fa-lock"></i></button>
+                                    <button class="btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>003</td>
+                                <td>Bob Williams</td>
+                                <td>Parent</td>
+                                <td>bob@example.com</td>
+                                <td><span class="badge inactive">Inactive</span></td>
+                                <td>April 29, 2023</td>
+                                <td>
+                                    <button class="btn-sm btn-primary"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-sm btn-secondary"><i class="fas fa-lock"></i></button>
+                                    <button class="btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="subjectsSection" class="content-section admin-only">
+                <h2>Subject Management</h2>
+                <div class="subject-controls">
+                    <button class="btn-primary"><i class="fas fa-plus"></i> Add Subject</button>
+                </div>
+                <div class="subjects-grid" id="subjectsGrid">
+                </div>
+
+                <script>
+                const subjects = [
+                    { name: "Mathematics", icon: "calculator", type: "math", teachers: 5, classes: 10 },
+                    { name: "Science", icon: "flask", type: "science", teachers: 4, classes: 8 },
+                    { name: "English", icon: "book", type: "english", teachers: 3, classes: 6 }
+                ];
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    const grid = document.getElementById('subjectsGrid');
+                    if (grid) {
+                        let html = '';
+                        subjects.forEach(subject => {
+                            html += `
+                            <div class="subject-card">
+                                <div class="subject-icon ${subject.type}">
+                                    <i class="fas fa-${subject.icon}"></i>
+                                </div>
+                                <h3>${subject.name}</h3>
+                                <p>Teachers: ${subject.teachers}</p>
+                                <p>Classes: ${subject.classes}</p>
+                                <div class="subject-actions">
+                                    <button class="btn-sm btn-primary"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>`;
+                        });
+                        grid.innerHTML = html;
+                    }
+                });
+                </script>
+            </section>
+
+            <section id="configSection" class="content-section admin-only">
+                <h2>System Configuration</h2>
+                <div class="config-card">
+                    <h3>Academic Year</h3>
+                    <div class="config-item">
+                        <label>Current Academic Year:</label>
+                        <select>
+                            <option>2022-2023</option>
+                            <option>2023-2024</option>
+                        </select>
+                    </div>
+                    <div class="config-item">
+                        <label>Term:</label>
+                        <select>
+                            <option>Term 1</option>
+                            <option>Term 2</option>
+                            <option>Term 3</option>
+                        </select>
+                    </div>
+                    <button class="btn-primary">Save Changes</button>
+                </div>
+                <div class="config-card">
+                    <h3>Grade Scale</h3>
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>Grade</th>
+                                <th>Minimum %</th>
+                                <th>Maximum %</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>A</td>
+                                <td><input type="number" value="90" min="0" max="100"></td>
+                                <td><input type="number" value="100" min="0" max="100"></td>
+                            </tr>
+                            <tr>
+                                <td>B</td>
+                                <td><input type="number" value="80" min="0" max="100"></td>
+                                <td><input type="number" value="89" min="0" max="100"></td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td><input type="number" value="70" min="0" max="100"></td>
+                                <td><input type="number" value="79" min="0" max="100"></td>
+                            </tr>
+                            <tr>
+                                <td>D</td>
+                                <td><input type="number" value="60" min="0" max="100"></td>
+                                <td><input type="number" value="69" min="0" max="100"></td>
+                            </tr>
+                            <tr>
+                                <td>F</td>
+                                <td><input type="number" value="0" min="0" max="100"></td>
+                                <td><input type="number" value="59" min="0" max="100"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button class="btn-primary">Save Changes</button>
+                </div>
+            </section>
+
+            <section id="settingsSection" class="content-section">
+                <h2>Settings</h2>
+                <div class="settings-card">
+                    <h3>Account Settings</h3>
+                    <div class="setting-item">
+                        <label>Email Notifications:</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="emailNotifications" checked>
+                            <label for="emailNotifications"></label>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <label>SMS Alerts:</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="smsAlerts">
+                            <label for="smsAlerts"></label>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <label>Two-Factor Authentication:</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="twoFactorAuth">
+                            <label for="twoFactorAuth"></label>
+                        </div>
+                    </div>
+                    <button class="btn-primary">Save Preferences</button>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div class="overlay" id="editProfileOverlay">
+        <div class="popup">
+            <h2>Edit Profile</h2>
+            <input type="text" id="editFullName" placeholder="Full Name">
+            <input type="email" id="editEmail" placeholder="Email Address">
+            <input type="text" id="editDob" placeholder="Date of Birth">
+            <input type="text" id="editContact" placeholder="Contact Number">
+            <input type="text" id="editAddress" placeholder="Address">
+            <button onclick="saveProfileChanges()">Save Changes</button>
+            <button class="cancel-btn" onclick="hideEditPopups()">Cancel</button>
+        </div>
+    </div>
+
+    <div class="overlay" id="changePasswordOverlay">
+        <div class="popup">
+            <h2>Change Password</h2>
+            <input type="password" id="currentPassword" placeholder="Current Password">
+            <input type="password" id="newPassword" placeholder="New Password">
+            <input type="password" id="confirmPassword" placeholder="Confirm New Password">
+            <button onclick="changePassword()">Change Password</button>
+            <button class="cancel-btn" onclick="hideEditPopups()">Cancel</button>
+        </div>
+    </div>
+    <footer>
+        <div class="footer-icons">
+            <a href="https://example.com/link1" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://www.facebook.com/share/15mwWqysUs/" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+            <a href="https://www.linkedin.com/in/francis-ndemo-8781602bb" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="https://x.com/frank_ndemo?t=Kk6LTf57EDNe6HXQjeGklg&s=09" target="_blank"><i class="fa-brands fa-twitter"></i></a>
+            <a href="https://example.com/link4" target="_blank"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+        <div class="footer-text">
+            © 2025 TrackMySuccess. Guiding Growth, Tracking Progress, Achieving Success.
+        </div>
+    </footer>
+</body>
+</html>
