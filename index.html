@@ -54,22 +54,19 @@
             </div> 
         </div>
 
-<!-- Password Reset Popup -->
 <div class="overlay" id="passwordReseOverlay" style="display: none;">
     <div class="rese-popup">
       <h2 id="reseTitle">Reset password</h2>
       <p class="rese-subtitle">We'll email you a password reset link.</p>
       
-      <!-- Email Input State -->
       <div id="emailInputState">
         <div class="input-group">
-          <input type="email" id="resetEmail" placeholder="Enter your account email">
+          <input type="email" id="resetEmail" placeholder="example@gmail.com">
           <p class="error-message" id="emailError" style="display: none;">Please enter a valid email</p>
         </div>
         <button class="reset-btn" onclick="startPasswordReset()">Start password reset</button>
       </div>
       
-      <!-- Success State (hidden initially) -->
       <div id="successState" style="display: none;">
         <div class="email-confirmation">
           <span id="confirmedEmail">likentnerg@gmail.com</span>
